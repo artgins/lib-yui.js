@@ -1,12 +1,12 @@
 /***********************************************************************
- *          src/lib-yui/index.js
+ *          src/gobj-ui/index.js
  *
  *          Yuneta UI Library - Reusable GUI components.
  *
  *          VENDORED copy of @yuneta/gobj-ui, owned by wattyzer for
  *          fast in-place development.  Edit these files directly.
  *          When the work stabilizes, fold the changes back into
- *          yunetas/kernel/js/lib-yui and restore the package dep.
+ *          yunetas/kernel/js/gobj-ui and restore the package dep.
  *
  *          Copyright (c) 2025, ArtGins.
  *          All Rights Reserved.
@@ -78,12 +78,12 @@ export { info_traffic, setup_dev, build_dev_panel, apply_dev_traces, dev_window_
 /*
  *  CSS - import these in your main entry point
  *  Example:
- *    import "lib-yui/src/c_yui_main.css";
- *    import "lib-yui/src/c_yui_shell.css";     // declarative shell
- *    import "lib-yui/src/c_yui_map.css";
- *    import "lib-yui/src/c_yui_routing.css";
- *    import "lib-yui/src/ytable.css";
- *    import "lib-yui/src/yui_toolbar.css";
- *    import "lib-yui/src/lib_graph.css";
- *    import "lib-yui/src/yui_icons.css";
+ *    import "gobj-ui/src/c_yui_main.css";
+ *    import "gobj-ui/src/c_yui_shell.css";     // declarative shell
+ *    import "gobj-ui/src/c_yui_map.css";
+ *    import "gobj-ui/src/c_yui_routing.css";
+ *    import "gobj-ui/src/ytable.css";
+ *    import "gobj-ui/src/yui_toolbar.css";
+ *    import "gobj-ui/src/lib_graph.css";
+ *    import "gobj-ui/src/yui_icons.css";
  */

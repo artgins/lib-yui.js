@@ -1411,7 +1411,7 @@ function build_toolbar_avatar_item(gobj, it)
 
 /*  Read initials from the registered provider (if any) and write them
  *  into a single avatar node.  The provider is a host-supplied callback
- *  () => string; lib-yui never reaches into localStorage or app attrs. */
+ *  () => string; gobj-ui never reaches into localStorage or app attrs. */
 function paint_avatar(priv, $node)
 {
     let provider = priv && priv.avatar_provider;
@@ -2202,7 +2202,7 @@ function yui_shell_pop_escape(shell_gobj, handler)
  *  Avatar provider — toolbar items with type:"avatar" call the
  *  registered provider whenever the shell paints initials.  The
  *  provider is a free-form () => string callback owned by the
- *  host (wattyzer/hidraulia/estadodelaire), so lib-yui never
+ *  host (wattyzer/hidraulia/estadodelaire), so gobj-ui never
  *  reaches into localStorage or app-specific attrs.  Setting the
  *  provider repaints existing avatars in-place; calling
  *  yui_shell_refresh_avatars() repaints without changing the

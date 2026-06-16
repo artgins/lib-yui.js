@@ -1,4 +1,4 @@
-# `lib-yui` shell — pending work
+# `gobj-ui` shell — pending work
 
 Living TODO for the declarative shell.  Everything originally on
 this list (the new shell + nav, escape stack, modal/notification
@@ -42,7 +42,7 @@ grep -rl EV_ROUTING_CHANGED      kernel/ utils/ yunos/
 grep -rlE 'display_(error|info|warning|volatil)|get_yes|get_ok' kernel/ utils/ yunos/
 ```
 
-Likely consumers inside `lib-yui`:
+Likely consumers inside `gobj-ui`:
 
 - `c_yui_treedb_topics.js`
 - `c_yui_treedb_topic_with_form.js`
@@ -62,7 +62,7 @@ For each consumer:
 ### 1.3. Migrate `estadodelaire/gui` to the shell — first real-world test
 
 The companion repo `artgins/estadodelaire` is the canonical app on
-top of `lib-yui`.  Replace its bootstrap:
+top of `gobj-ui`.  Replace its bootstrap:
 
 - `gui/src/main.js`: drop `register_c_yui_main / register_c_yui_routing`,
   add `register_c_yui_shell / register_c_yui_nav` and registrations
@@ -89,7 +89,7 @@ top of `lib-yui`.  Replace its bootstrap:
   **before continuing**.  Do not patch around it ad-hoc inside
   `gui/`.
 
-### 1.4. Delete `C_YUI_MAIN` and `C_YUI_ROUTING` from `lib-yui`
+### 1.4. Delete `C_YUI_MAIN` and `C_YUI_ROUTING` from `gobj-ui`
 
 Gated on 1.1, 1.2, 1.3.  All four greps above must return empty.
 
@@ -100,12 +100,12 @@ Gated on 1.1, 1.2, 1.3.  All four greps above must return empty.
   `c_yui_routing.css` from any remaining `main.js`.
 - Update `SHELL.md` §11 to remove the "Do not import `c_yui_main.css`
   and `c_yui_shell.css` together" item (and renumber).
-- Update `README.md` of `lib-yui` to drop the `C_YUI_MAIN` /
+- Update `README.md` of `gobj-ui` to drop the `C_YUI_MAIN` /
   `C_YUI_ROUTING` mentions.
-- Bump `lib-yui` to `8.0.0` (breaking change).  Add CHANGELOG entry
+- Bump `gobj-ui` to `8.0.0` (breaking change).  Add CHANGELOG entry
   with the removal and link to this TODO.
 
-**Done when (1 as a whole):** `lib-yui` no longer ships either
+**Done when (1 as a whole):** `gobj-ui` no longer ships either
 gclass and no consumer inside the org references them.
 
 ---

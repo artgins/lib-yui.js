@@ -5,7 +5,7 @@ Replaces the `C_YUI_MAIN` + `C_YUI_ROUTING` pair (both still exist and
 can coexist) with a couple of GClasses driven by a JSON document in the
 Yuneta configuration style.
 
-- Built with **Vite** (same as the rest of `lib-yui`).
+- Built with **Vite** (same as the rest of `gobj-ui`).
 - Backed by **Bulma** (`.menu`, `.tabs`, `.level`, `.navbar`,
   `is-hidden-*` helpers). No JS framework is introduced; everything is
   DOM + GObj.
@@ -21,7 +21,7 @@ it.**
 
   1. **The application declares** in `app_config.json`: zones, menus,
      toolbar items, view bindings, breakpoints, hover tooltips.
-  2. **`lib-yui` materialises** the DOM and owns *all* CSS for shell
+  2. **`gobj-ui` materialises** the DOM and owns *all* CSS for shell
      chrome (toolbar, drawers, dropdowns, navs).  Apps do not poke
      into the shell's elements; they do not ship media queries that
      target shell selectors.
@@ -35,7 +35,7 @@ When you reach for a feature, climb this ladder in order:
 
   a. Can it be expressed by extending the JSON contract (a new field
      or a new `type`/`action.type` value)?  Do that.
-  b. If not, can a small public helper in `lib-yui` cover it without
+  b. If not, can a small public helper in `gobj-ui` cover it without
      leaking DOM details to the host?  Add the helper.
   c. Touching app DOM/CSS directly is a last resort and signals a
      gap in (a) or (b) that should be filed back upstream.
@@ -67,7 +67,7 @@ keyed on `data-toolbar-item-id`, the shell got better at its job.
    that was there"*.
 6. **Per-option lifecycle**: `eager` / `keep_alive` / `lazy_destroy`,
    to balance the cost of rebuilding against RAM usage.
-7. **No regressions on `lib-yui`**: existing components (`C_YUI_MAIN`,
+7. **No regressions on `gobj-ui`**: existing components (`C_YUI_MAIN`,
    `C_YUI_ROUTING`, `C_YUI_TABS`, etc.) are left untouched.
 
 ---
@@ -223,7 +223,7 @@ Each zone may declare:
 The shell translates the expression into a set of **custom CSS classes**
 that hide the zone per breakpoint. Bulma only ships "up-to" helpers
 (`is-hidden-tablet`, `is-hidden-desktop`) — to be able to say *"hidden
-only on tablet"* `lib-yui` adds these classes in `c_yui_shell.css`:
+only on tablet"* `gobj-ui` adds these classes in `c_yui_shell.css`:
 
 | Class                          | Hidden when                 |
 |--------------------------------|-----------------------------|
@@ -235,7 +235,7 @@ only on tablet"* `lib-yui` adds these classes in `c_yui_shell.css`:
 
 No classes outside this table are expected in `show_on`. The parser is
 pure and is covered by `tests/shell_show_on.test.mjs` (`npm test` in
-`lib-yui/`).
+`gobj-ui/`).
 
 Example:
 
@@ -375,7 +375,7 @@ menu label.
     yui_shell_set_avatar_provider(shell, () => "JD");
     yui_shell_refresh_avatars(shell);   // re-paint after a change
     ```
-    `lib-yui` never reads the user model directly; the host owns it.
+    `gobj-ui` never reads the user model directly; the host owns it.
 - `items[].action.type`:
   - `"navigate"` → `{ route }` — delegated to the shell (respects
     `use_hash`).
@@ -856,7 +856,7 @@ managing its visibility.
 | Submenu as tabs **or** as a side submenu                 | `submenu.render[zone]` set to `"tabs"` / `"vertical"` / etc.  |
 | Fixed toolbar at top or bottom                           | `shell.zones.top.host = "toolbar"` (or `bottom`)              |
 | Built on top of Bulma helpers                            | `.menu`, `.tabs`, `.level`, `is-hidden-*`; our own CSS only for `icon-bar`, `drawer`, `accordion`, and the per-breakpoint hiders |
-| Vite-compatible                                          | Same flow as the rest of `lib-yui`                            |
+| Vite-compatible                                          | Same flow as the rest of `gobj-ui`                            |
 | Drop-in for libyui later                                 | Re-exported from `index.js`                                   |
 
 ---
@@ -866,7 +866,7 @@ managing its visibility.
 See `test-app/README.md`. Quick start:
 
 ```
-cd kernel/js/lib-yui/test-app
+cd kernel/js/gobj-ui/test-app
 npm install
 npm run dev
 ```

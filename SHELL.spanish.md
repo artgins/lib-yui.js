@@ -5,7 +5,7 @@ Sustituye al tándem `C_YUI_MAIN` + `C_YUI_ROUTING` (ambos siguen existiendo
 y pueden convivir) por un par de GClasses guiadas por un JSON al estilo
 de la configuración de Yuneta.
 
-- Construido con **Vite** (igual que el resto de `lib-yui`).
+- Construido con **Vite** (igual que el resto de `gobj-ui`).
 - Apoyado en **Bulma** (`.menu`, `.tabs`, `.level`, `.navbar`, helpers
   `is-hidden-*`). No introduce framework JS; todo es DOM + GObj.
 - Diseñado para integrarse en `libyui` al finalizar la validación.
@@ -30,7 +30,7 @@ de la configuración de Yuneta.
    *"mostrar un gobj en su zona y ocultar el que había"*.
 6. **Ciclo de vida configurable por opción**: `eager` / `keep_alive` /
    `lazy_destroy`, para equilibrar coste de reconstrucción vs. RAM.
-7. **Sin regresiones sobre `lib-yui`**: los componentes existentes
+7. **Sin regresiones sobre `gobj-ui`**: los componentes existentes
    (`C_YUI_MAIN`, `C_YUI_ROUTING`, `C_YUI_TABS`, etc.) no se tocan.
 
 ---
@@ -109,7 +109,7 @@ Cada zona puede declarar:
 El shell traduce la expresión a un conjunto de **clases CSS propias** que
 ocultan la zona por breakpoint. Bulma sólo define helpers "hasta"
 (`is-hidden-tablet`, `is-hidden-desktop`) — para poder decir *"sólo
-oculto en tablet"* `lib-yui` añade estas clases en `c_yui_shell.css`:
+oculto en tablet"* `gobj-ui` añade estas clases en `c_yui_shell.css`:
 
 | Clase                          | Oculta en                   |
 |--------------------------------|-----------------------------|
@@ -121,7 +121,7 @@ oculto en tablet"* `lib-yui` añade estas clases en `c_yui_shell.css`:
 
 No se esperan clases fuera de esta tabla en `show_on`. El parser es puro
 y está cubierto por `tests/shell_show_on.test.mjs` (`npm test` en
-`lib-yui/`).
+`gobj-ui/`).
 
 Ejemplo:
 
@@ -359,7 +359,7 @@ gestionar su visibilidad.
 | Submenú como tabs **o** como submenú               | `submenu.render[zone]` a `"tabs"` / `"vertical"` / etc.    |
 | Toolbar fija en top o bottom                        | `shell.zones.top.host = "toolbar"` (o `bottom`)            |
 | Construido con helpers Bulma                        | `.menu`, `.tabs`, `.level`, `is-hidden-*`, CSS nuestro sólo para `icon-bar`, `drawer`, `accordion` y los hiders por breakpoint |
-| Compatible con Vite                                 | Mismo flujo que el resto de `lib-yui`                      |
+| Compatible con Vite                                 | Mismo flujo que el resto de `gobj-ui`                      |
 | Integrable luego en libyui                          | Exportado desde `index.js`                                 |
 
 ---
@@ -369,7 +369,7 @@ gestionar su visibilidad.
 Ver `test-app/README.md`. Resumen:
 
 ```
-cd kernel/js/lib-yui/test-app
+cd kernel/js/gobj-ui/test-app
 npm install
 npm run dev
 ```
@@ -384,7 +384,7 @@ contador `instance #` que pinta `C_TEST_VIEW`).
 
 Este corte cierra **todas** las promesas del diseño original. Pendientes
 son los dos consumidores históricos (`C_YUI_MAIN` y `C_YUI_ROUTING`) que
-todavía se usan desde otras partes de `lib-yui`:
+todavía se usan desde otras partes de `gobj-ui`:
 
 ### Implementado ✓
 
@@ -424,7 +424,7 @@ Los siguientes puntos son los bloqueantes antes de borrar cada uno:
    `display_info`, `display_confirm` a helpers del shell que pinten en
    `layers.notification` / `layers.modal`.
 2. **Grid de widgets / `C_YUI_MAIN.layout`** — revisar qué consumidores
-   de `lib-yui` lo usan (`grep register_c_yui_main`). Cada uno pasa al
+   de `gobj-ui` lo usan (`grep register_c_yui_main`). Cada uno pasa al
    shell declarando sus zonas.
 3. **`C_YUI_ROUTING`** — el hash routing ya está en el shell, pero
    `C_YUI_TABS` y algún otro componente todavía lo usan. Se retira

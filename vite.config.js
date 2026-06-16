@@ -27,14 +27,14 @@ export default defineConfig({
                 {
                     format: "es",
                     dir: "dist",
-                    entryFileNames: "lib-yui.es.js",
+                    entryFileNames: "gobj-ui.es.js",
                 },
                 // Non-minified UMD Module
                 {
                     name: "libYui",
                     format: "umd",
                     dir: "dist",
-                    entryFileNames: "lib-yui.umd.js",
+                    entryFileNames: "gobj-ui.umd.js",
                     globals: {
                         "@yuneta/gobj-js": "gobjJs",
                         "@antv/g6": "G6",
@@ -51,14 +51,14 @@ export default defineConfig({
                     name: "libYui",
                     format: "cjs",
                     dir: "dist",
-                    entryFileNames: "lib-yui.cjs.js",
+                    entryFileNames: "gobj-ui.cjs.js",
                 },
                 // Non-minified IIFE Module
                 {
                     name: "libYui",
                     format: "iife",
                     dir: "dist",
-                    entryFileNames: "lib-yui.iife.js",
+                    entryFileNames: "gobj-ui.iife.js",
                     globals: {
                         "@yuneta/gobj-js": "gobjJs",
                         "@antv/g6": "G6",
@@ -75,7 +75,7 @@ export default defineConfig({
                 {
                     format: "es",
                     dir: "dist",
-                    entryFileNames: "lib-yui.es.min.js",
+                    entryFileNames: "gobj-ui.es.min.js",
                     plugins: [terser()]
                 },
                 // Minified UMD Module
@@ -83,7 +83,7 @@ export default defineConfig({
                     name: "libYui",
                     format: "umd",
                     dir: "dist",
-                    entryFileNames: "lib-yui.umd.min.js",
+                    entryFileNames: "gobj-ui.umd.min.js",
                     plugins: [terser()],
                     globals: {
                         "@yuneta/gobj-js": "gobjJs",
@@ -101,7 +101,7 @@ export default defineConfig({
                     name: "libYui",
                     format: "cjs",
                     dir: "dist",
-                    entryFileNames: "lib-yui.cjs.min.js",
+                    entryFileNames: "gobj-ui.cjs.min.js",
                     plugins: [terser()]
                 },
                 // Minified IIFE Module
@@ -109,7 +109,7 @@ export default defineConfig({
                     name: "libYui",
                     format: "iife",
                     dir: "dist",
-                    entryFileNames: "lib-yui.iife.min.js",
+                    entryFileNames: "gobj-ui.iife.min.js",
                     plugins: [terser()],
                     globals: {
                         "@yuneta/gobj-js": "gobjJs",

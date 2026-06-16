@@ -8,7 +8,7 @@
  *            - Content-Security-Policy from config.csp_connect_src
  *
  *          Usage in vite.config.js (vendored copy):
- *            import { yunetaHtmlPlugin } from "./src/lib-yui/vite-plugin-yuneta-html.js";
+ *            import { yunetaHtmlPlugin } from "./src/gobj-ui/vite-plugin-yuneta-html.js";
  *            plugins: [ yunetaHtmlPlugin({ defaultTitle: "My App" }) ]
  *
  *          Copyright (c) 2025, ArtGins.
