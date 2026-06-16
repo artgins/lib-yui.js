@@ -1,0 +1,89 @@
+/***********************************************************************
+ *          src/lib-yui/index.js
+ *
+ *          Yuneta UI Library - Reusable GUI components.
+ *
+ *          VENDORED copy of @yuneta/lib-yui, owned by wattyzer for
+ *          fast in-place development.  Edit these files directly.
+ *          When the work stabilizes, fold the changes back into
+ *          yunetas/kernel/js/lib-yui and restore the package dep.
+ *
+ *          Copyright (c) 2025, ArtGins.
+ *          All Rights Reserved.
+ ***********************************************************************/
+
+/*
+ *  Components
+ */
+export { register_c_yui_main, display_volatil_modal, display_info_message, display_warning_message, display_error_message, get_yesnocancel, get_yesno, get_ok } from "./c_yui_main.js";
+export { register_c_yui_window } from "./c_yui_window.js";
+export { register_c_yui_tabs } from "./c_yui_tabs.js";
+export { register_c_yui_pager } from "./c_yui_pager.js";
+export { register_c_yui_wizard } from "./c_yui_wizard.js";
+export { register_c_yui_form } from "./c_yui_form.js";
+export { register_c_yui_routing } from "./c_yui_routing.js";
+export { register_c_yui_map } from "./c_yui_map.js";
+export { register_c_yui_uplot } from "./c_yui_uplot.js";
+export { register_c_yui_json_graph } from "./c_yui_json_graph.js";
+export { register_c_yui_gobj_tree_js } from "./c_yui_gobj_tree_js.js";
+
+/*
+ *  Declarative shell + menu navigation (new in v7.4)
+ */
+export {
+    register_c_yui_shell,
+    yui_shell_navigate,
+    yui_shell_open_drawer,
+    yui_shell_close_drawer,
+    yui_shell_toggle_drawer,
+    yui_shell_push_escape,
+    yui_shell_pop_escape,
+    yui_shell_set_avatar_provider,
+    yui_shell_refresh_avatars,
+    yui_shell_set_translator,
+    yui_shell_set_connection_state,
+    yui_shell_set_toolbar_item_icon,
+    yui_shell_close_dropdown,
+} from "./c_yui_shell.js";
+export { register_c_yui_nav } from "./c_yui_nav.js";
+export {
+    yui_shell_show_info,
+    yui_shell_show_warning,
+    yui_shell_show_error,
+    yui_shell_show_modal,
+    yui_shell_confirm_ok,
+    yui_shell_confirm_yesno,
+    yui_shell_confirm_yesnocancel,
+} from "./shell_modals.js";
+
+/*
+ *  TreeDB components
+ */
+export { register_c_yui_treedb_topics } from "./c_yui_treedb_topics.js";
+export { register_c_yui_treedb_topic_with_form } from "./c_yui_treedb_topic_with_form.js";
+export { register_c_yui_treedb_graph } from "./c_yui_treedb_graph.js";
+export { register_c_g6_nodes_tree } from "./c_g6_nodes_tree.js";
+
+/*
+ *  Libraries and utilities
+ */
+export { addClasses, removeClasses, toggleClasses, removeChildElements, disableElements, enableElements, set_submit_state, set_cancel_state, set_active_state, getStrokeColor } from "./lib_graph.js";
+export { inject_svg_icons } from "./lib_icons.js";
+export { EditControl, MarkerControl } from "./lib_maplibre.js";
+export { themes } from "./themes.js";
+export { YTable, createYTable } from "./ytable.js";
+export { yui_toolbar } from "./yui_toolbar.js";
+export { info_traffic, setup_dev, build_dev_panel, apply_dev_traces, dev_window_was_open } from "./yui_dev.js";
+
+/*
+ *  CSS - import these in your main entry point
+ *  Example:
+ *    import "lib-yui/src/c_yui_main.css";
+ *    import "lib-yui/src/c_yui_shell.css";     // declarative shell
+ *    import "lib-yui/src/c_yui_map.css";
+ *    import "lib-yui/src/c_yui_routing.css";
+ *    import "lib-yui/src/ytable.css";
+ *    import "lib-yui/src/yui_toolbar.css";
+ *    import "lib-yui/src/lib_graph.css";
+ *    import "lib-yui/src/yui_icons.css";
+ */
