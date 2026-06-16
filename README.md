@@ -12,7 +12,7 @@ that plugs into the GObject tree and communicates via events.
 `lib-yui` is the **Yuneta UI library**. This `v1` line is the **frozen legacy
 GClass GUI stack only** — `C_YUI_MAIN`, `C_YUI_WINDOW`, `C_YUI_TABS`,
 `C_YUI_FORM`, `C_YUI_ROUTING`, TreeDB editors, charts and maps. It is consumed
-by **estadodelaire** and **hidraulia**, which resolve `@yuneta/lib-yui` to this
+by **estadodelaire** and **hidraulia**, which resolve `@yuneta/gobj-ui` to this
 checkout through an npm `file:` dependency.
 
 The **declarative shell** (`C_YUI_SHELL`, `C_YUI_NAV`, `C_YUI_PAGER`,
@@ -63,7 +63,7 @@ To build:
 
     vite build
 
-To publish a new version of @yuneta/lib-yui to [npmjs.com](https://www.npmjs.com/package/@yuneta/lib-yui):
+To publish a new version of @yuneta/gobj-ui to [npmjs.com](https://www.npmjs.com/package/@yuneta/gobj-ui):
 
     # 1. Configure your npm token (only once)
     echo "//registry.npmjs.org/:_authToken=<your-token>" > ~/.npmrc
@@ -101,7 +101,7 @@ In your project's `package.json`:
 ```json
 {
     "dependencies": {
-        "@yuneta/lib-yui": "file:../../../yunetas/kernel/js/lib-yui",
+        "@yuneta/gobj-ui": "file:../../../yunetas/kernel/js/lib-yui",
         "@yuneta/gobj-js": "file:../../../yunetas/kernel/js/gobj-js"
     }
 }
@@ -123,7 +123,7 @@ import {
     register_c_yui_treedb_topics,
     register_c_yui_treedb_graph,
     inject_svg_icons,
-} from "@yuneta/lib-yui";
+} from "@yuneta/gobj-ui";
 
 // Register in main():
 register_c_yui_main();
@@ -135,13 +135,13 @@ register_c_yui_tabs();
 ### 3. Import CSS
 
 ```js
-import "@yuneta/lib-yui/src/c_yui_main.css";
-import "@yuneta/lib-yui/src/c_yui_map.css";
-import "@yuneta/lib-yui/src/c_yui_routing.css";
-import "@yuneta/lib-yui/src/ytable.css";
-import "@yuneta/lib-yui/src/yui_toolbar.css";
-import "@yuneta/lib-yui/src/lib_graph.css";
-import "@yuneta/lib-yui/src/yui_icons.css";
+import "@yuneta/gobj-ui/src/c_yui_main.css";
+import "@yuneta/gobj-ui/src/c_yui_map.css";
+import "@yuneta/gobj-ui/src/c_yui_routing.css";
+import "@yuneta/gobj-ui/src/ytable.css";
+import "@yuneta/gobj-ui/src/yui_toolbar.css";
+import "@yuneta/gobj-ui/src/lib_graph.css";
+import "@yuneta/gobj-ui/src/yui_icons.css";
 ```
 
 ### 4. Configure `C_YUI_MAIN` with your app branding
@@ -169,7 +169,7 @@ __yuno__.__yui_main__ = gobj_create_service(
 
 ```js
 import { defineConfig } from "vite";
-import { yunetaHtmlPlugin } from "@yuneta/lib-yui/vite-plugin-yuneta-html.js";
+import { yunetaHtmlPlugin } from "@yuneta/gobj-ui/vite-plugin-yuneta-html.js";
 
 export default defineConfig({
     resolve: {
@@ -346,7 +346,7 @@ Entries starting with `_comment` are ignored (used for inline documentation).
 Shared plugin that replaces the placeholders in `index.html` at build time.
 
 ```js
-import { yunetaHtmlPlugin } from "@yuneta/lib-yui/vite-plugin-yuneta-html.js";
+import { yunetaHtmlPlugin } from "@yuneta/gobj-ui/vite-plugin-yuneta-html.js";
 
 // Options:
 yunetaHtmlPlugin({
