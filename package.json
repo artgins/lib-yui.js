@@ -14,7 +14,8 @@
         "./skeleton/*": "./skeleton/*"
     },
     "files": [
-        "dist/",
+        "dist/gobj-ui.es.js",
+        "dist/gobj-ui.cjs.js",
         "index.js",
         "src/",
         "skeleton/",
