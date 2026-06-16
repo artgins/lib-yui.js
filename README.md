@@ -1,4 +1,4 @@
-# lib-yui — Yuneta UI Library
+# gobj-ui — Yuneta UI Library
 
 > **This is the `v1` (frozen) branch.** Active development is on `main` (v2).
 > See the branch table in the `main` README.
@@ -9,7 +9,7 @@ that plugs into the GObject tree and communicates via events.
 
 ## What this package ships
 
-`lib-yui` is the **Yuneta UI library**. This `v1` line is the **frozen legacy
+`gobj-ui` is the **Yuneta UI library**. This `v1` line is the **frozen legacy
 GClass GUI stack only** — `C_YUI_MAIN`, `C_YUI_WINDOW`, `C_YUI_TABS`,
 `C_YUI_FORM`, `C_YUI_ROUTING`, TreeDB editors, charts and maps. It is consumed
 by **estadodelaire** and **hidraulia**, which resolve `@yuneta/gobj-ui` to this
@@ -19,9 +19,9 @@ The **declarative shell** (`C_YUI_SHELL`, `C_YUI_NAV`, `C_YUI_PAGER`,
 `C_YUI_WIZARD`) is **not** on this line — it lives on the **v2 / `main`** line,
 consumed by **wattyzer**.
 
-> **Where development happens.** This repo (`github.com/artgins/lib-yui.js`) is
+> **Where development happens.** This repo (`github.com/artgins/gobj-ui.js`) is
 > the single source of truth, embedded as a git submodule in both yunetas
-> (`kernel/js/lib-yui`, tracking `v1`) and wattyzer (`gui/src/lib-yui`, tracking
+> (`kernel/js/gobj-ui`, tracking `v1`) and wattyzer (`gui/src/gobj-ui`, tracking
 > `main`/v2). All new feature work lands on `main`/v2; `v1` is maintenance-only.
 
 ## Components
@@ -101,7 +101,7 @@ In your project's `package.json`:
 ```json
 {
     "dependencies": {
-        "@yuneta/gobj-ui": "file:../../../yunetas/kernel/js/lib-yui",
+        "@yuneta/gobj-ui": "file:../../../yunetas/kernel/js/gobj-ui",
         "@yuneta/gobj-js": "file:../../../yunetas/kernel/js/gobj-js"
     }
 }
@@ -182,13 +182,13 @@ export default defineConfig({
 ```
 
 > **Note**: `preserveSymlinks: true` is required so that Vite resolves
-> `import "@yuneta/gobj-js"` from within lib-yui's source files using the host
+> `import "@yuneta/gobj-js"` from within gobj-ui's source files using the host
 > app's `node_modules/`.
 
 ## Project Structure
 
 ```
-lib-yui/
+gobj-ui/
 ├── index.js                           # Barrel re-exports
 ├── package.json                       # Peer dependencies
 ├── vite-plugin-yuneta-html.js         # Shared Vite plugin
@@ -286,7 +286,7 @@ square** (the default CSS mask with no image). Before using a new
 icon name, grep the file:
 
 ```bash
-grep '^\.yi-.*::before' kernel/js/lib-yui/src/yui_icons.css
+grep '^\.yi-.*::before' kernel/js/gobj-ui/src/yui_icons.css
 ```
 
 If you need an icon that isn't there, add it to `yui_icons.css` first
@@ -298,8 +298,8 @@ memory `yui_icons_set`.
 Copy the template files from `skeleton/` to bootstrap a new GUI:
 
 ```bash
-cp lib-yui/skeleton/index.html  my-gui/index.html
-cp lib-yui/skeleton/config.json my-gui/config.json
+cp gobj-ui/skeleton/index.html  my-gui/index.html
+cp gobj-ui/skeleton/config.json my-gui/config.json
 ```
 
 ### `index.html`
@@ -367,7 +367,7 @@ The plugin generates a strict Content-Security-Policy with:
 
 ## Peer Dependencies
 
-lib-yui does **not** bundle these — your project must include them:
+gobj-ui does **not** bundle these — your project must include them:
 
 | Package | Used by |
 |---------|---------|

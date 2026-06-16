@@ -6,7 +6,7 @@
  *          NOTE 2026-05-21: the declarative shell stack
  *          (C_YUI_SHELL, C_YUI_NAV, C_YUI_PAGER, C_YUI_WIZARD,
  *          shell_modals + helpers) was removed from this package
- *          and now evolves only in wattyzer/gui/src/lib-yui/
+ *          and now evolves only in wattyzer/gui/src/gobj-ui/
  *          (vendored flat copy).  Legacy apps (estadodelaire)
  *          consume this package and only need the
  *          legacy stack (C_YUI_MAIN + C_YUI_WINDOW + C_YUI_TABS
@@ -53,11 +53,11 @@ export { info_traffic, setup_dev, build_dev_panel } from "./src/yui_dev.js";
 /*
  *  CSS - import these in your main entry point
  *  Example:
- *    import "lib-yui/src/c_yui_main.css";
- *    import "lib-yui/src/c_yui_map.css";
- *    import "lib-yui/src/c_yui_routing.css";
- *    import "lib-yui/src/ytable.css";
- *    import "lib-yui/src/yui_toolbar.css";
- *    import "lib-yui/src/lib_graph.css";
- *    import "lib-yui/src/yui_icons.css";
+ *    import "gobj-ui/src/c_yui_main.css";
+ *    import "gobj-ui/src/c_yui_map.css";
+ *    import "gobj-ui/src/c_yui_routing.css";
+ *    import "gobj-ui/src/ytable.css";
+ *    import "gobj-ui/src/yui_toolbar.css";
+ *    import "gobj-ui/src/lib_graph.css";
+ *    import "gobj-ui/src/yui_icons.css";
  */

@@ -2,12 +2,12 @@
     "name": "@yuneta/gobj-ui",
     "version": "1.0.0",
     "type": "module",
-    "main": "dist/lib-yui.cjs.js",
-    "module": "dist/lib-yui.es.js",
+    "main": "dist/gobj-ui.cjs.js",
+    "module": "dist/gobj-ui.es.js",
     "exports": {
         ".": {
-            "import": "./dist/lib-yui.es.js",
-            "require": "./dist/lib-yui.cjs.js"
+            "import": "./dist/gobj-ui.es.js",
+            "require": "./dist/gobj-ui.cjs.js"
         },
         "./src/*": "./src/*",
         "./vite-plugin-yuneta-html.js": "./vite-plugin-yuneta-html.js",
