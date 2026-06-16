@@ -11,33 +11,37 @@ Published as `@yuneta/gobj-ui`. Built on top of [`@yuneta/gobj-js`](https://gith
 This repository carries **two parallel lines** with different layouts and
 consumers. They are independent snapshots (no shared git ancestry):
 
-| Line | Branch | Tag | Layout | Consumers | Status |
-|------|--------|-----|--------|-----------|--------|
-| **v2** | `main` | `2.0.0` | flat (`*.js` at root) | **wattyzer** | active development |
-| **v1** | `v1` | `1.0.0` | `src/` subdir | **estadodelaire**, **hidraulia** | frozen, maintenance-only |
+| Line | Branch | Tag | Layout | Consumed by | How | Status |
+|------|--------|-----|--------|-------------|-----|--------|
+| **v2** | `main` | `2.0.0`+ | flat (`*.js` at root) | **wattyzer** | local `file:` dep on the yunetas submodule | active development |
+| **v1** | `v1` | `1.0.0` | `src/` subdir | **estadodelaire**, **hidraulia** | published npm `@yuneta/gobj-ui@^1.0.0` | frozen, maintenance-only |
 
 - **v2 / `main`** is the active development line: the declarative shell on top
-  of the legacy stack. It is embedded as a git submodule in **wattyzer** at
-  `gui/src/gobj-ui` and consumed as plain source via relative imports.
+  of the legacy stack. It is embedded as a git submodule in **yunetas** at
+  `kernel/js/gobj-ui`, and **wattyzer** consumes that checkout as a `file:`
+  dependency (`@yuneta/gobj-ui` → `../../../yunetas/kernel/js/gobj-ui`),
+  importing by package specifier (`@yuneta/gobj-ui/*.js`, exports map `"./*"`).
 - **v1 / `v1`** is the frozen legacy-only stack (the declarative shell is not on
-  this line). It is embedded as a git submodule in **yunetas** at
-  `kernel/js/gobj-ui`; estadodelaire and hidraulia resolve `@yuneta/gobj-ui`
-  there through an npm `file:` dependency. Land only maintenance fixes here.
+  this line). It is **published to npm**; estadodelaire and hidraulia depend on
+  `@yuneta/gobj-ui@^1.0.0` from the registry. Land only maintenance fixes here,
+  then `npm publish` a new `1.x`.
 
 All new feature work lands on `main`/v2.
 
-## Usage as a submodule
+## Usage
 
 ```bash
-# clone a superproject with its submodules
-git clone --recurse-submodules <superproject>
-# or, after a plain clone:
-git submodule update --init kernel/js/gobj-ui      # yunetas (v1)
-git submodule update --init gui/src/gobj-ui         # wattyzer (main/v2)
+# v2 (active): clone yunetas with submodules; wattyzer picks it up via file:
+git clone --recurse-submodules <yunetas>
+git submodule update --init kernel/js/gobj-ui      # yunetas tracks main/v2
+
+# v1 (frozen): consumers just install the published package
+npm install @yuneta/gobj-ui@^1.0.0
 ```
 
-Edit gobj-ui from the superproject checkout, commit on the appropriate line in
-this repo, then bump the submodule pointer in the superproject.
+Edit v2 from the yunetas `kernel/js/gobj-ui` checkout, commit on `main` in this
+repo, then bump that submodule pointer in yunetas. For v1, work from a `v1`
+checkout and publish.
 
 ## Build & test
 
@@ -47,8 +51,8 @@ npm run build      # vite -> dist/ (ES/CJS/UMD/IIFE, min + non-min)
 npm test           # vitest (v2/main only; v1 has no test target)
 ```
 
-`dist/` is gitignored. Consumers that import the package root (`@yuneta/gobj-ui`)
-resolve to `dist/gobj-ui.es.js` via the exports map, so rebuild `dist/` after
-updating the v1 submodule.
+`dist/` is gitignored. v1 consumers get `dist/` from the **published** npm
+tarball; v2 (wattyzer) imports source files by specifier. Rebuild `dist/` to
+validate and before publishing a v1 release.
 
 Copyright (c) 2024-2026, ArtGins. All Rights Reserved.
