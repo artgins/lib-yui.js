@@ -38,6 +38,7 @@ import {
     gobj_match_children,
     msg_iev_get_stack,
     kw_get_dict, gobj_stop_children,
+    refresh_language,
 } from "@yuneta/gobj-js";
 
 import {
@@ -285,6 +286,16 @@ function add_tab(gobj, gobj2, id, text, icon)
     $a.appendChild(
         createElement2(['span', {i18n: text, class: ''}, text])
     );
+
+    /*
+     *  Translate the tab NOW.  The span carries data-i18n but its
+     *  initial text is the raw key (the topic_name).  Tabs are built
+     *  lazily when topic descriptions arrive from the backend —
+     *  AFTER the host's one-time refresh_language($container,t) —
+     *  so without this they stay as raw keys ("device_groups", …).
+     *  `t` is the i18next translator already imported here.
+     */
+    refresh_language($a, t);
 
     /*
      *  Self-contained tab navigation.  The `href` is kept only as a

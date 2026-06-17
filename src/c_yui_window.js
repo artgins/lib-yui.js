@@ -79,6 +79,7 @@ SDATA(data_type_t.DTP_BOOLEAN,  "modal",        0,  false,  "Enable modal mode")
 SDATA(data_type_t.DTP_BOOLEAN,  "keyboard",     0,  true,   "Close window on ESC if not modal"),
 SDATA(data_type_t.DTP_POINTER,  "$container",   0,  null,   "Internal: Window container element"),
 SDATA(data_type_t.DTP_STRING,   "window_id",    0,  "",     "Internal: Window ID"),
+SDATA(data_type_t.DTP_POINTER,  "win_resize_handler", 0, null, "Internal: native window 'resize' listener"),
 SDATA_END()
 ];
 
@@ -114,6 +115,20 @@ function mt_create(gobj)
     let window_id = "window-" + clean_name(gobj_short_name(gobj));
     gobj_write_attr(gobj, "window_id", window_id);
     build_ui(gobj);
+
+    /*  Keep the window inside the viewport on a breakpoint change.
+     *  Wired in mt_create (NOT mt_start) on purpose: windows are
+     *  often created via gobj_create_service WITHOUT being started
+     *  (e.g. setup_dev, the connection-info window), so mt_start
+     *  never runs — the legacy __yui_main__/EV_RESIZE path is dead
+     *  under C_YUI_SHELL too.  A native 'resize' listener is
+     *  start-independent and reuses handleResize() (clamp-to-screen
+     *  + optional re-center).  Detached in mt_destroy. */
+    let on_win_resize = function() {
+        handleResize(gobj);
+    };
+    gobj_write_attr(gobj, "win_resize_handler", on_win_resize);
+    window.addEventListener("resize", on_win_resize);
 }
 
 /***************************************************************
@@ -144,6 +159,11 @@ function mt_stop(gobj)
  ***************************************************************/
 function mt_destroy(gobj)
 {
+    let on_win_resize = gobj_read_attr(gobj, "win_resize_handler");
+    if(on_win_resize) {
+        window.removeEventListener("resize", on_win_resize);
+        gobj_write_attr(gobj, "win_resize_handler", null);
+    }
     destroy_ui(gobj);
 }
 
@@ -232,12 +252,29 @@ function build_ui(gobj)
              *          Header
              *----------------------------*/
             ['div', {
-                class: 'yui-window-header p-1 is-flex-shrink-0 is-flex-wrap-wrap is-flex is-justify-content-space-between is-align-items-center has-text-black has-background-info', style: 'border-bottom:1px solid var(--bulma-border); cursor:move; box-sizing: border-box;'
+                class: 'yui-window-header p-1 is-flex-shrink-0 is-flex is-flex-nowrap is-justify-content-space-between is-align-items-flex-start has-text-black has-background-info', style: 'border-bottom:1px solid var(--bulma-border); cursor:move; box-sizing: border-box;'
                 }, [
-                ['div', { class: 'is-flex-grow-1', style: 'height:100%;min-height:0;'}, [
-                    ['div', {class: '', style: 'width: 100%;'}, header]
+                /*  Custom header content: a single-row, horizontally
+                 *  scrollable strip.  It takes the remaining width and
+                 *  may shrink (min-width:0); its content is laid out in
+                 *  ONE row (inline-flex, nowrap) so a wide header (e.g.
+                 *  the dev toolbar) scrolls sideways instead of wrapping
+                 *  taller and eating the body.  The header height stays
+                 *  ~one row on every breakpoint, and the max/close group
+                 *  to the right is never pushed out. */
+                ['div', { class: 'is-flex-grow-1', style: 'min-width:0; overflow-x:auto; overflow-y:hidden;'}, [
+                    /*  width:max-content sizes this to the UNWRAPPED
+                     *  (single-line) width of the header content, so a
+                     *  Bulma .buttons bar inside lays out in one row and
+                     *  OVERFLOWS the scroll viewport above instead of
+                     *  wrapping taller.  inline-flex alone didn't: the
+                     *  child still inherited the column's constrained
+                     *  width and kept wrapping. */
+                    ['div', {class: '', style: 'width:max-content; display:flex; flex-wrap:nowrap; align-items:center;'}, header]
                 ]],
-                ['div', {class: 'is-flex-shrink-0 is-flex-wrap-wrap is-flex'}, [
+                /*  Max/close: pinned top-right, never shrink, never
+                 *  wrap, always on top so the click always lands. */
+                ['div', {class: 'is-flex-shrink-0 is-flex is-flex-nowrap is-align-items-flex-start', style: 'position:relative; z-index:1; cursor:default;'}, [
                     /*----------------------------*
                      *      Max/min button
                      *----------------------------*/
@@ -246,6 +283,7 @@ function build_ui(gobj)
                         style: {
                             color: 'var(--bulma-text)',
                             "font-size": "1.4em",
+                            "cursor": "pointer",
                             "display": gobj_read_bool_attr(gobj, "showMax")?'inline-block':'none',
                         }
                     }, '<i class="yi-square"></i>', {
@@ -259,7 +297,7 @@ function build_ui(gobj)
                      *----------------------------*/
                     ['button', {
                         class: 'without-border pr-2',
-                        style: 'color:var(--bulma-text);font-size:1.6em;',
+                        style: 'color:var(--bulma-text);font-size:1.6em;cursor:pointer;',
                     }, '<i class="yi-xmark"></i>', {
                         click: (evt) => {
                             evt.stopPropagation();
@@ -270,9 +308,36 @@ function build_ui(gobj)
             ],
                 {
                     pointerdown: (evt) => {
-                        if(!evt.target.classList.contains("yi-xmark")) {
-                            mvStart(gobj, evt);
+                        /*  Never start a window-move when the press
+                         *  lands on a header control button (max /
+                         *  close) — anywhere on the button, not just
+                         *  its <i> glyph.  The old `target is the
+                         *  yi-xmark <i>` test failed on the button
+                         *  padding and entirely on the max button, so
+                         *  a narrow/wrapped header made the X
+                         *  un-closable (drag ate the click). */
+                        if(evt.target.closest && evt.target.closest("button")) {
+                            return;
                         }
+                        /*  Pressing the scrollbar of the single-row
+                         *  header strip (overflow-x:auto) must scroll,
+                         *  not drag the window.  When the press is on
+                         *  the scroll container itself and falls in
+                         *  the scrollbar gutter (offset beyond the
+                         *  client box of an overflowing element), skip
+                         *  the move.  Pressing the title text / a
+                         *  button has its own target, so dragging by
+                         *  the header content still works. */
+                        let t = evt.target;
+                        if(t && t.scrollWidth > t.clientWidth &&
+                            evt.offsetY > t.clientHeight) {
+                            return;
+                        }
+                        if(t && t.scrollHeight > t.clientHeight &&
+                            evt.offsetX > t.clientWidth) {
+                            return;
+                        }
+                        mvStart(gobj, evt);
                     }
                 }
             ],
@@ -298,14 +363,19 @@ function build_ui(gobj)
                     class: 'is-justify-content-space-between is-align-items-center p-1',
                     style: {
                         "display": gobj_read_bool_attr(gobj, "showFooter")?'flex':'none',
+                        "flex-wrap": "nowrap",
                         "border-top": "1px solid var(--bulma-border)",
                         "min-height": "30px",
                         "box-sizing": "border-box",
                     }
                 }, [
 
-                    ['div', { class: 'is-flex-grow-1', style: 'height:100%;min-height:0;'}, [
-                        ['div', {class: '', style: 'width: 100%;'}, footer]
+                    /*  Same single-row, horizontally scrollable strip
+                     *  as the header: a wide status bar scrolls
+                     *  sideways instead of wrapping taller, and the
+                     *  resize handle stays pinned bottom-right. */
+                    ['div', { class: 'is-flex-grow-1', style: 'min-width:0; overflow-x:auto; overflow-y:hidden;'}, [
+                        ['div', {class: '', style: 'width:max-content; display:flex; flex-wrap:nowrap; align-items:center;'}, footer]
                     ]],
 
                     /*----------------------------*
@@ -705,17 +775,38 @@ function handleResize(gobj)
     if(!$container) {
         return;
     }
-    let rect = $container.getBoundingClientRect();
-    rect = do_fix_dimension_to_screen(gobj, rect.x, rect.y, rect.width, rect.height);
+
+    /*  Maximized: just refit to the (new) viewport. */
+    if(gobj_read_bool_attr(gobj, "maximized") === true) {
+        let r = do_fix_dimension_to_screen(gobj, 0, 0, 10000, 10000);
+        if(gobj_read_bool_attr(gobj, "center")) {
+            r = do_center(gobj, r.x, r.y, r.width, r.height);
+        }
+        $container.style.left = parseInt(r.x) + 'px';
+        $container.style.top = parseInt(r.y) + 'px';
+        $container.style.width = parseInt(r.width) + 'px';
+        $container.style.height = parseInt(r.height) + 'px';
+        return;
+    }
+
+    /*  Smart restore: clamp the DESIRED size (the configured /
+     *  last user-resized width & height attrs — rsStop keeps them
+     *  in sync) to the viewport, NOT the already-rendered rect.
+     *  Clamping the current rect made the window shrink on mobile
+     *  and never grow back on desktop (every resize started from
+     *  the already-shrunk size).  Position is kept and re-clamped. */
+    let want_x = gobj_read_integer_attr(gobj, "x");
+    let want_y = gobj_read_integer_attr(gobj, "y");
+    let want_w = gobj_read_integer_attr(gobj, "width");
+    let want_h = gobj_read_integer_attr(gobj, "height");
+    let rect = do_fix_dimension_to_screen(gobj, want_x, want_y, want_w, want_h);
     if(gobj_read_bool_attr(gobj, "center")) {
         rect = do_center(gobj, rect.x, rect.y, rect.width, rect.height);
     }
-    if($container) {
-        $container.style.left = rect.x + 'px';
-        $container.style.top = rect.y + 'px';
-        $container.style.width = rect.width +'px';
-        $container.style.height = gobj_read_bool_attr(gobj, "content_size")?"auto":parseInt(rect.height) +'px';
-    }
+    $container.style.left = rect.x + 'px';
+    $container.style.top = rect.y + 'px';
+    $container.style.width = rect.width + 'px';
+    $container.style.height = gobj_read_bool_attr(gobj, "content_size") ? "auto" : parseInt(rect.height) + 'px';
 }
 
 

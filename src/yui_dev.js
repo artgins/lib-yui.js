@@ -289,6 +289,50 @@ function info_user()
 }
 
 /************************************************************
+ *  Was the developer window open last session?  setup_dev()
+ *  persists open_developer_window (1 on open, 0 on close), so
+ *  the host can reopen it on refresh and keep collecting
+ *  traffic/traces it had enabled.
+ ************************************************************/
+function dev_window_was_open()
+{
+    return Number(kw_get_local_storage_value("open_developer_window", 0, false))
+        ? true : false;
+}
+
+/************************************************************
+ *  Apply ALL persisted developer-trace flags to the running
+ *  yuno.  Independent of the dev window — call it once at app
+ *  startup so a refresh keeps logging whatever was enabled.
+ *  Single source of truth for "localStorage flag → effect";
+ *  setup_dev() and build_dev_panel() reuse it instead of each
+ *  re-applying a partial subset.
+ ************************************************************/
+function apply_dev_traces()
+{
+    let traffic       = Number(kw_get_local_storage_value("trace_traffic", 0, false));
+    let trace         = Number(kw_get_local_storage_value("trace_automata", 0, false));
+    let creation      = Number(kw_get_local_storage_value("trace_creation", 0, false));
+    let start_stop    = Number(kw_get_local_storage_value("trace_start_stop", 0, false));
+    let subscriptions = Number(kw_get_local_storage_value("trace_subscriptions", 0, false));
+    let i18n          = Number(kw_get_local_storage_value("trace_i18n", 0, false));
+    let no_poll       = Number(kw_get_local_storage_value("no_poll", 0, false));
+
+    if(traffic) {
+        gobj_write_attr(gobj_yuno(), "trace_inter_event", true);
+        gobj_write_attr(gobj_yuno(), "trace_ievent_callback", info_traffic);
+    } else {
+        gobj_write_attr(gobj_yuno(), "trace_inter_event", false);
+    }
+    gobj_write_attr(gobj_yuno(), "tracing", trace);
+    gobj_write_attr(gobj_yuno(), "trace_creation", creation);
+    gobj_write_attr(gobj_yuno(), "trace_start_stop", start_stop);
+    gobj_write_attr(gobj_yuno(), "trace_subscriptions", subscriptions);
+    gobj_write_attr(gobj_yuno(), "no_poll", no_poll);
+    i18next.options.debug = i18n ? true : false;
+}
+
+/************************************************************
  *  Open the developer panel inside a non-modal C_YUI_WINDOW
  *  (title bar + maximize + close + resize).
  *
@@ -415,7 +459,7 @@ function setup_dev(self, show)
                 center: false,
                 // resizable: false,
                 body: '<div style="overflow:scroll;height:100%;"><div id="developer-traffic-logger" style="margin-left:10px;margin-right:10px;"/></div>',
-                footer: `<div id="developer-window-info" class="is-flex is-justify-content-space-between">${estados}</div>`,
+                footer: `<div id="developer-window-info" class="is-flex is-justify-content-space-between" style="gap:1.25rem;white-space:nowrap;">${estados}</div>`,
                 on_close: function() {
                     kw_set_local_storage_value("open_developer_window", 0);
                 }
@@ -427,12 +471,7 @@ function setup_dev(self, show)
 
     }
 
-    if(traffic) {
-        gobj_write_attr(gobj_yuno(), "trace_inter_event", true);
-        gobj_write_attr(gobj_yuno(), "trace_ievent_callback", info_traffic);
-    }
-    gobj_write_attr(gobj_yuno(), "tracing", trace);
-    gobj_write_attr(gobj_yuno(), "no_poll", no_poll);
+    apply_dev_traces();
 }
 
 /************************************************************
@@ -526,18 +565,12 @@ function build_dev_panel()
                 class: 'is-flex is-justify-content-space-between',
                 style: 'flex:0 0 auto;border-top:1px solid ' + bd +
                     ';padding-top:6px;margin-top:6px;font-size:12px;' +
-                    'opacity:0.85;flex-wrap:wrap;',
+                    'opacity:0.85;flex-wrap:nowrap;gap:1.25rem;white-space:nowrap;',
             }, counters],
         ]]
     );
 
-    // Mirror setup_dev's tail: apply the persisted trace flags.
-    if(traffic) {
-        gobj_write_attr(gobj_yuno(), "trace_inter_event", true);
-        gobj_write_attr(gobj_yuno(), "trace_ievent_callback", info_traffic);
-    }
-    gobj_write_attr(gobj_yuno(), "tracing", trace);
-    gobj_write_attr(gobj_yuno(), "no_poll", no_poll);
+    apply_dev_traces();
 
     let dispose = function() {
         // Stop feeding traffic into a detached DOM.
@@ -547,4 +580,4 @@ function build_dev_panel()
     return {$el: $el, dispose: dispose};
 }
 
-export {info_traffic, setup_dev, build_dev_panel};
+export {info_traffic, setup_dev, build_dev_panel, apply_dev_traces, dev_window_was_open};

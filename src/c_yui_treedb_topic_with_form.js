@@ -553,6 +553,33 @@ function datasetToObject(dataset)
 }
 
 /******************************************************************
+ *   i18n label for a schema column.
+ *
+ *   Key cascade (i18next tries each in order, first hit wins):
+ *     1) "<topic_name>.<col.id>"  — per-topic, stable.  Needed
+ *        because some col.ids are NOT unique across topics: every
+ *        topic has an `id` pkey but its caption differs ("Device
+ *        Group" vs "Device" vs "User"…).  A flat `id` key could
+ *        only ever be one of them.
+ *     2) "<col.id>"               — shared, stable.  Generic
+ *        columns (enabled, description, role…) translate once and
+ *        apply to every topic; no need to repeat them per topic.
+ *     3) defaultValue: col.header || col.id — untranslated column
+ *        reads exactly as before (zero regression).
+ *
+ *   Both key parts are schema **ids**: stable, never reworded
+ *   (unlike col.header, which a release may recaption and would
+ *   then silently break a header-keyed translation).  So: add a
+ *   `topic.col` entry only for the ambiguous ones (the `id`
+ *   columns); leave the rest on the flat shared key.
+ ******************************************************************/
+function col_label(col, topic_name)
+{
+    let keys = topic_name ? [topic_name + "." + col.id, col.id] : [col.id];
+    return t(keys, { defaultValue: col.header || col.id });
+}
+
+/******************************************************************
  *   Build table with Tabulator
  *   This fn is called on start and when desc attribute is set.
  *   desc contains the description (columns) of table to create
@@ -689,7 +716,7 @@ function create_tabulator(gobj)
         }
 
         let colDef = {
-            title: col.header || col.id,
+            title: col_label(col, gobj_read_str_attr(gobj, "topic_name")),
             field: col.id,
             sorter: sorter,
             hozAlign: hozAlign,
@@ -1032,7 +1059,7 @@ function build_topic_form(gobj)
             tag: tag,
             inputType: form_input_type,
             name: col.id,
-            label: t(col.header || col.id),
+            label: col_label(col, gobj_read_str_attr(gobj, "topic_name")),
             placeholder: "",
             options: options,   // select,select2,radio options
             extras: extras,     // extra html input/textarea attributes

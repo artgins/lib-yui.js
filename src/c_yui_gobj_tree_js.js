@@ -40,7 +40,7 @@ import {
     refresh_language,
 } from "@yuneta/gobj-js";
 
-import {yui_toolbar} from "@yuneta/gobj-ui";
+import {yui_toolbar} from "./yui_toolbar.js";
 
 import {t} from "i18next";
 
