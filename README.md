@@ -13,14 +13,15 @@ consumers. They are independent snapshots (no shared git ancestry):
 
 | Line | Branch | Tag | Layout | Consumed by | How | Status |
 |------|--------|-----|--------|-------------|-----|--------|
-| **v2** | `main` | `2.0.0`+ | flat (`*.js` at root) | **wattyzer** | local `file:` dep on the yunetas submodule | active development |
+| **v2** | `main` | `2.0.0`+ | `src/` subdir | **wattyzer** | local `file:` dep on the yunetas submodule | active development |
 | **v1** | `v1` | `1.0.0` | `src/` subdir | **estadodelaire**, **hidraulia** | published npm `@yuneta/gobj-ui@^1.0.0` | frozen, maintenance-only |
 
 - **v2 / `main`** is the active development line: the declarative shell on top
   of the legacy stack. It is embedded as a git submodule in **yunetas** at
   `kernel/js/gobj-ui`, and **wattyzer** consumes that checkout as a `file:`
   dependency (`@yuneta/gobj-ui` → `../../../yunetas/kernel/js/gobj-ui`),
-  importing by package specifier (`@yuneta/gobj-ui/*.js`, exports map `"./*"`).
+  importing by package specifier (`@yuneta/gobj-ui/src/*.js`, exports map
+  `"./src/*"`; the `index.js` barrel and the vite plugin stay at the package root).
 - **v1 / `v1`** is the frozen legacy-only stack (the declarative shell is not on
   this line). It is **published to npm**; estadodelaire and hidraulia depend on
   `@yuneta/gobj-ui@^1.0.0` from the registry. Land only maintenance fixes here,

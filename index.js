@@ -1,31 +1,30 @@
 /***********************************************************************
- *          src/gobj-ui/index.js
+ *          @yuneta/gobj-ui/index.js  (v2 / main line)
  *
  *          Yuneta UI Library - Reusable GUI components.
  *
- *          VENDORED copy of @yuneta/gobj-ui, owned by wattyzer for
- *          fast in-place development.  Edit these files directly.
- *          When the work stabilizes, fold the changes back into
- *          yunetas/kernel/js/gobj-ui and restore the package dep.
+ *          Barrel re-exports for the v2 source, which lives in src/.
+ *          This is the canonical line, embedded as the yunetas submodule
+ *          kernel/js/gobj-ui and consumed by wattyzer via a file: dep.
  *
- *          Copyright (c) 2025, ArtGins.
+ *          Copyright (c) 2024-2026, ArtGins.
  *          All Rights Reserved.
  ***********************************************************************/
 
 /*
  *  Components
  */
-export { register_c_yui_main, display_volatil_modal, display_info_message, display_warning_message, display_error_message, get_yesnocancel, get_yesno, get_ok } from "./c_yui_main.js";
-export { register_c_yui_window } from "./c_yui_window.js";
-export { register_c_yui_tabs } from "./c_yui_tabs.js";
-export { register_c_yui_pager } from "./c_yui_pager.js";
-export { register_c_yui_wizard } from "./c_yui_wizard.js";
-export { register_c_yui_form } from "./c_yui_form.js";
-export { register_c_yui_routing } from "./c_yui_routing.js";
-export { register_c_yui_map } from "./c_yui_map.js";
-export { register_c_yui_uplot } from "./c_yui_uplot.js";
-export { register_c_yui_json_graph } from "./c_yui_json_graph.js";
-export { register_c_yui_gobj_tree_js } from "./c_yui_gobj_tree_js.js";
+export { register_c_yui_main, display_volatil_modal, display_info_message, display_warning_message, display_error_message, get_yesnocancel, get_yesno, get_ok } from "./src/c_yui_main.js";
+export { register_c_yui_window } from "./src/c_yui_window.js";
+export { register_c_yui_tabs } from "./src/c_yui_tabs.js";
+export { register_c_yui_pager } from "./src/c_yui_pager.js";
+export { register_c_yui_wizard } from "./src/c_yui_wizard.js";
+export { register_c_yui_form } from "./src/c_yui_form.js";
+export { register_c_yui_routing } from "./src/c_yui_routing.js";
+export { register_c_yui_map } from "./src/c_yui_map.js";
+export { register_c_yui_uplot } from "./src/c_yui_uplot.js";
+export { register_c_yui_json_graph } from "./src/c_yui_json_graph.js";
+export { register_c_yui_gobj_tree_js } from "./src/c_yui_gobj_tree_js.js";
 
 /*
  *  Declarative shell + menu navigation (new in v7.4)
@@ -44,8 +43,8 @@ export {
     yui_shell_set_connection_state,
     yui_shell_set_toolbar_item_icon,
     yui_shell_close_dropdown,
-} from "./c_yui_shell.js";
-export { register_c_yui_nav } from "./c_yui_nav.js";
+} from "./src/c_yui_shell.js";
+export { register_c_yui_nav } from "./src/c_yui_nav.js";
 export {
     yui_shell_show_info,
     yui_shell_show_warning,
@@ -54,26 +53,26 @@ export {
     yui_shell_confirm_ok,
     yui_shell_confirm_yesno,
     yui_shell_confirm_yesnocancel,
-} from "./shell_modals.js";
+} from "./src/shell_modals.js";
 
 /*
  *  TreeDB components
  */
-export { register_c_yui_treedb_topics } from "./c_yui_treedb_topics.js";
-export { register_c_yui_treedb_topic_with_form } from "./c_yui_treedb_topic_with_form.js";
-export { register_c_yui_treedb_graph } from "./c_yui_treedb_graph.js";
-export { register_c_g6_nodes_tree } from "./c_g6_nodes_tree.js";
+export { register_c_yui_treedb_topics } from "./src/c_yui_treedb_topics.js";
+export { register_c_yui_treedb_topic_with_form } from "./src/c_yui_treedb_topic_with_form.js";
+export { register_c_yui_treedb_graph } from "./src/c_yui_treedb_graph.js";
+export { register_c_g6_nodes_tree } from "./src/c_g6_nodes_tree.js";
 
 /*
  *  Libraries and utilities
  */
-export { addClasses, removeClasses, toggleClasses, removeChildElements, disableElements, enableElements, set_submit_state, set_cancel_state, set_active_state, getStrokeColor } from "./lib_graph.js";
-export { inject_svg_icons } from "./lib_icons.js";
-export { EditControl, MarkerControl } from "./lib_maplibre.js";
-export { themes } from "./themes.js";
-export { YTable, createYTable } from "./ytable.js";
-export { yui_toolbar } from "./yui_toolbar.js";
-export { info_traffic, setup_dev, build_dev_panel, apply_dev_traces, dev_window_was_open } from "./yui_dev.js";
+export { addClasses, removeClasses, toggleClasses, removeChildElements, disableElements, enableElements, set_submit_state, set_cancel_state, set_active_state, getStrokeColor } from "./src/lib_graph.js";
+export { inject_svg_icons } from "./src/lib_icons.js";
+export { EditControl, MarkerControl } from "./src/lib_maplibre.js";
+export { themes } from "./src/themes.js";
+export { YTable, createYTable } from "./src/ytable.js";
+export { yui_toolbar } from "./src/yui_toolbar.js";
+export { info_traffic, setup_dev, build_dev_panel, apply_dev_traces, dev_window_was_open } from "./src/yui_dev.js";
 
 /*
  *  CSS - import these in your main entry point
