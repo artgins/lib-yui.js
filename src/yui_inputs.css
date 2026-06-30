@@ -16,7 +16,10 @@
 .control.has-clear input.input {
     padding-right: 2.25em;
 }
-.yui-input-clear {
+/*  Descendant selector (3 classes) so these win over Bulma's own
+ *  `.delete` rules (position:relative; display:inline-block) regardless
+ *  of which stylesheet loads last.  */
+.control.has-clear .yui-input-clear {
     position: absolute;
     top: 50%;
     right: 0.5em;
@@ -24,6 +27,6 @@
     display: none;
     z-index: 4;
 }
-.yui-input-clear.is-visible {
+.control.has-clear .yui-input-clear.is-visible {
     display: inline-block;
 }
